@@ -1,5 +1,9 @@
 Rails.application.routes.draw do
-  root 'home#index'
+  devise_for :users
+
+  root 'home#call'
+  get 'call' => 'home#call'
+
   post 'outboundcall' => 'home#outboundcall'
   post 'twilio/voice' => 'twilio#voice'
   get 'twilio/inbound' => 'twilio#inbound'

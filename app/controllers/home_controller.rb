@@ -1,7 +1,7 @@
 class HomeController < ApplicationController
   skip_before_filter :verify_authenticity_token, only: [:outboundcall]
 
-  def index
+  def call
     account_sid = ENV['TWILIO_SID']
     auth_token = ENV['TWILIO_TOKEN']
     capability = Twilio::Util::Capability.new account_sid, auth_token
