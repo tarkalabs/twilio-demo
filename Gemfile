@@ -29,6 +29,11 @@ gem 'twitter-bootstrap-rails'
 # Adding Authentication with Devise
 gem 'devise'
 
+# Resque is Redis-backed Ruby lib for creating bkground jobs, placing them on multiple queues,
+# and processing them later. resque-web is a NEW Rails-based web interface to Resque.
+gem 'resque'
+gem 'resque-web', require: 'resque_web'
+
 group :development do
   # Spring speeds up development by keeping your application running in the background.
   # Read more: https://github.com/rails/spring

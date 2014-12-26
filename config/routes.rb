@@ -1,5 +1,20 @@
+require 'resque_web'
+
 Rails.application.routes.draw do
+
   devise_for :users
+
+  # Route constraint using the current user when using Devise or another warden based authentication system
+  resque_web_constraint = lambda do |request|
+    current_user = request.env['warden'].user
+    # current_user.present? && current_user.respond_to?(:is_admin?) && current_user.is_admin?
+    # puts "request.env['warden'].authenticate? = #{request.env['warden'].authenticate?}"
+    # request.env['warden'].authenticate?
+    true
+  end
+  constraints resque_web_constraint do
+    mount ResqueWeb::Engine => "/resque_web"
+  end
 
   root 'home#call'
   get 'call' => 'home#call'
