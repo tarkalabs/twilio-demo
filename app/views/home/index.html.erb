@@ -1,0 +1,49 @@
+<div id="twilioToken" data-token="<%= @twilio_token %>"></div>
+
+<button id="caller" class="call" onclick="call();" data-caller="+919500031320">Call</button>
+<button id="hangup" class="hangup" onclick="hangup();">Hangup</button>
+
+<input type="text" id="phoneNumber" placeholder="Enter a phone number to call"/>
+
+<div id="log">Loading pigeons...</div>
+
+<script type="text/javascript" src="//static.twilio.com/libs/twiliojs/1.2/twilio.min.js"></script>
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+
+
+<script type="text/javascript">
+  /* Create the Client with a Capability Token */
+  Twilio.Device.setup("<%= @twilio_token %>", {debug: true});
+
+  /* Let us know when the client is ready. */
+  Twilio.Device.ready(function (device) {
+      $("#log").text("Ready");
+  });
+
+  /* Report any errors on the screen */
+  Twilio.Device.error(function (error) {
+      $("#log").text("Error: " + error.message);
+  });
+
+  Twilio.Device.connect(function (conn) {
+      $("#log").text("Successfully established call");
+  });
+
+  /* Log a message when a call disconnects. */
+    Twilio.Device.disconnect(function (conn) {
+        $("#log").text("Call ended");
+    });
+
+  /* Connect to Twilio when we call this function. */
+  function call() {
+        // get the phone number to connect the call to
+        params = {"ToPhoneNumber": $("#phoneNumber").val(),
+                  "FromPhoneNumber": $('#caller').attr('data-caller')};
+        Twilio.Device.connect(params);
+      }
+
+  /* A function to end a connection to Twilio. */
+  function hangup() {
+      Twilio.Device.disconnectAll();
+  }
+</script>
