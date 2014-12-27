@@ -8,9 +8,17 @@ class User < ActiveRecord::Base
   # Reference: http://rails-bestpractices.com/posts/695-use-after_commit
   # References: http://www.codebeerstartups.com/2012/11/use-after_commit-instead-of-active-record-callbacks-to-avoid-unexpected-errors
   after_commit :create_twilio_subaccount, on: :create
+  before_destroy :delete_twilio_subaccount
 
   def create_twilio_subaccount
     return if Rails.env.test?
-    Resque.enqueue(TwilioServiceWorker, :create_subaccount, self.id)
+    logger.info "create_twilio_subaccount callback invoked for id = #{self.id}"
+    Resque.enqueue(TwilioServiceWorker, :create_subaccount, { id: self.id })
+  end
+
+  def delete_twilio_subaccount
+    return if Rails.env.test?
+    logger.info "delete_twilio_subaccount callback invoked for id = #{self.id}, sid = #{self.sid}"
+    Resque.enqueue(TwilioServiceWorker, :delete_subaccount, { id: self.id, sid: self.sid })
   end
 end

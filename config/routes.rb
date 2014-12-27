@@ -1,4 +1,5 @@
 require 'resque_web'
+ResqueWeb::Engine.eager_load! if Rails.env.development?
 
 Rails.application.routes.draw do
 
@@ -6,7 +7,7 @@ Rails.application.routes.draw do
 
   # Route constraint using the current user when using Devise or another warden based authentication system
   resque_web_constraint = lambda do |request|
-    current_user = request.env['warden'].user
+    # current_user = request.env['warden'].user
     # current_user.present? && current_user.respond_to?(:is_admin?) && current_user.is_admin?
     # puts "request.env['warden'].authenticate? = #{request.env['warden'].authenticate?}"
     # request.env['warden'].authenticate?
