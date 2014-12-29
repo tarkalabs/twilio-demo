@@ -28,4 +28,5 @@ class TwilioController < ApplicationController
                 body: 'Learning to send SMS you are.')
     render plain: message.status
   end
+
 end

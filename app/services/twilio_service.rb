@@ -32,4 +32,26 @@ class TwilioService
     subaccount.update(:status => "closed")
     subaccount.status
   end
+
+  def create_application sid, token
+    # https://www.twilio.com/docs/api/rest/applications
+    client = Twilio::REST::Client.new sid, token
+    app = client.account.applications.create(:friendly_name => "VoiceApp",
+    :voice_url => "http://6d7af12f.ngrok.com/outboundcall",
+    :voice_method => "POST") #TODO: Change to GET
+  end
+
+  def create_twiml_app_for subaccount
+    app = create_application(subaccount.sid, subaccount.auth_token)
+  end
+
+  def create_usage_trigger_on_price_for_calls sid, token, trigger_value
+    # https://www.twilio.com/docs/api/rest/usage-triggers#list-post
+    # https://www.twilio.com/docs/api/rest/usage-records#usage-categories
+    client = Twilio::REST::Client.new sid, token
+    trigger = client.account.usage.triggers.create(:trigger_value => trigger_value, # Could be like "1.30" or "+1.50",
+    :trigger_by => "price",
+    :usage_category => "totalprice", #"calls",
+    :callback_url => "http://6d7af12f.ngrok.com/outboundcall") #TODO: Have a controller-method to notify user of account suspended for voice
+  end
 end

@@ -17,11 +17,20 @@ class TwilioServiceWorker
     puts "create_subaccount invoked for id=#{id}"
     ts = TwilioService.new
     user = User.find id
-    subaccount = ts.create_subaccount("#{user.id}_#{user.email}")
-    #TODO: save subaccount.sid to against the user in table
-    user.sid = subaccount.sid
+    friendly_name = "#{user.id}_#{user.email}"
+    subaccount = ts.create_subaccount(friendly_name)
+
+    user.tsid = subaccount.sid
+    user.ttoken = subaccount.auth_token
+    user.tfriendlyname = friendly_name
     user.save!
     puts "A subaccount is successfully created at Twilio with friendly name = #{subaccount.friendly_name} and sid = #{subaccount.sid}"
+
+    app = ts.create_twiml_app_for(subaccount)
+    puts "A TwiML App for the sub-account #{subaccount.friendly_name} is created"
+
+    trigger_value = ".30"
+    trigger = ts.create_usage_trigger_on_price_for_calls(subaccount.sid, subaccount.auth_token, trigger_value)
   end
 
   def self.suspend_subaccount hash
