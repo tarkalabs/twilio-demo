@@ -20,6 +20,6 @@ module TwilioDemo
     # config.i18n.load_path += Dir[Rails.root.join('my', 'locales', '*.{rb,yml}').to_s]
     # config.i18n.default_locale = :de
 
-    # config.middleware.use Rack::TwilioWebhookAuthentication, Rails.application.secrets.twilio_auth_token, '/voice'
+    # config.middleware.use Rack::TwilioWebhookAuthentication, 'bbcf43f2dfd2596e67d24f2fba70698f', '/suspendaccount', '/outboundcall'
   end
 end

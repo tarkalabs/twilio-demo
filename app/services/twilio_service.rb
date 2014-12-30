@@ -38,7 +38,7 @@ class TwilioService
     client = Twilio::REST::Client.new sid, token
     app = client.account.applications.create(:friendly_name => "VoiceApp",
     :voice_url => "http://6d7af12f.ngrok.com/outboundcall",
-    :voice_method => "POST") #TODO: Change to GET
+    :voice_method => "POST") #TODO: Change to GET, necessary???
   end
 
   def create_twiml_app_for subaccount
@@ -52,6 +52,6 @@ class TwilioService
     trigger = client.account.usage.triggers.create(:trigger_value => trigger_value, # Could be like "1.30" or "+1.50",
     :trigger_by => "price",
     :usage_category => "totalprice", #"calls",
-    :callback_url => "http://6d7af12f.ngrok.com/outboundcall") #TODO: Have a controller-method to notify user of account suspended for voice
+    :callback_url => "http://6d7af12f.ngrok.com/suspendaccount") #TODO: Have a controller-method to notify user of account suspended for voice
   end
 end

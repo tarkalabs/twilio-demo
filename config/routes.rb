@@ -21,6 +21,7 @@ Rails.application.routes.draw do
   get 'call' => 'home#call'
 
   post 'outboundcall' => 'home#outboundcall'
+  post 'suspendaccount' => 'home#suspendaccount'
   post 'twilio/voice' => 'twilio#voice'
   get 'twilio/inbound' => 'twilio#inbound'
   post 'twilio/notify' => 'twilio#notify'
