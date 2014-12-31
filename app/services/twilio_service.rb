@@ -1,14 +1,8 @@
 require 'twilio-ruby'
 
 class TwilioService
-  def initialize
-    @twilio_sid = ENV['TWILIO_SID']
-    @twilio_token = ENV['TWILIO_TOKEN']
-  end
-
-  def rest_client
-    @rest_client ||= Twilio::REST::Client.new @twilio_sid, @twilio_token
-    return @rest_client
+  def rest_client(tsid = ENV['TWILIO_SID'], ttoken = ENV['TWILIO_TOKEN'])
+    Twilio::REST::Client.new tsid, ttoken
   end
 
   def create_subaccount friendly_name
@@ -48,7 +42,7 @@ class TwilioService
   def create_usage_trigger_on_price_for_calls sid, token, trigger_value
     # https://www.twilio.com/docs/api/rest/usage-triggers#list-post
     # https://www.twilio.com/docs/api/rest/usage-records#usage-categories
-    client = Twilio::REST::Client.new sid, token
+    client = rest_client(sid, token)
     trigger = client.account.usage.triggers.create(:trigger_value => trigger_value, # Could be like "1.30" or "+1.50",
     :trigger_by => "price",
     :usage_category => "totalprice", #"calls",

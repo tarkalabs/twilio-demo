@@ -18,7 +18,7 @@ class User < ActiveRecord::Base
 
   def delete_twilio_subaccount
     return if Rails.env.test?
-    logger.info "delete_twilio_subaccount callback invoked for id = #{self.id}, sid = #{self.sid}"
-    Resque.enqueue(TwilioServiceWorker, :delete_subaccount, { id: self.id, sid: self.sid })
+    logger.info "delete_twilio_subaccount callback invoked for id = #{self.id}, sid = #{self.tsid}"
+    Resque.enqueue(TwilioServiceWorker, :delete_subaccount, { id: self.id, tsid: self.tsid })
   end
 end

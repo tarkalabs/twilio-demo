@@ -9,9 +9,14 @@ class HomeController < ApplicationController
     # auth_token = ENV['TWILIO_TOKEN']
     # capability = Twilio::Util::Capability.new account_sid, auth_token
     # capability.allow_client_outgoing ENV['TWILIO_CALL_APP_SID']
-    capability = Twilio::Util::Capability.new tsid, tauthtoken
-    capability.allow_client_outgoing 'APc6169bac90c0012486b2cb07ed08e634' #tappsid
-    @twilio_token = capability.generate # 5 seconds, reference: https://www.twilio.com/docs/client/capability-tokens#token-expiration
+    # p "user=#{current_user.id}"
+    # p "tsid=#{tsid}, tauthtoken=#{tauthtoken}"
+    if tsid && tauthtoken
+      capability = Twilio::Util::Capability.new tsid, tauthtoken
+      capability.allow_client_outgoing tappsid
+      @twilio_token = capability.generate # 5 seconds, reference: https://www.twilio.com/docs/client/capability-tokens#token-expiration
+    end
+    @twilio_token ||= ''
   end
 
   #This is callback service. Twilio calls this when the end-user makes a call from Twilio Web Client
