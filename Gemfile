@@ -1,18 +1,10 @@
 source 'https://rubygems.org'
 
-
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '4.1.8'
 # Use sqlite3 as the database for Active Record
 gem 'sqlite3'
-# Use SCSS for stylesheets
 gem 'sass-rails', '~> 4.0.3'
-# Use Uglifier as compressor for JavaScript assets
-gem 'uglifier', '>= 1.3.0'
-# Use CoffeeScript for .js.coffee assets and views
-gem 'coffee-rails', '~> 4.0.0'
-# See https://github.com/sstephenson/execjs#readme for more supported runtimes
-# gem 'therubyracer',  platforms: :ruby
 
 # Use jquery as the JavaScript library
 gem 'jquery-rails'
@@ -21,10 +13,7 @@ gem 'turbolinks'
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 gem 'jbuilder', '~> 2.0'
 # bundle exec rake doc:rails generates the API under doc/api.
-gem 'sdoc', '~> 0.4.0',          group: :doc
-
-# Twitter Bootstrap for Rails 3.x - 4 Asset Pipeline
-gem 'twitter-bootstrap-rails'
+gem 'sdoc', '~> 0.4.0', group: :doc
 
 # Adding Authentication with Devise
 gem 'devise'
@@ -33,6 +22,22 @@ gem 'devise'
 # and processing them later. resque-web is a NEW Rails-based web interface to Resque.
 gem 'resque'
 gem 'resque-web', require: 'resque_web'
+
+# Gems used only for assets and not required
+# in production environments by default.
+group :assets do
+  # Use SCSS for stylesheets
+  gem 'sass-rails', '~> 4.0.3'
+  # Use CoffeeScript for .js.coffee assets and views
+  gem 'coffee-rails', '~> 4.0.0'
+
+  # See https://github.com/sstephenson/execjs#readme for more supported runtimes
+  # gem 'therubyracer'
+
+  gem 'uglifier', '>= 2.5.3'
+  # Twitter Bootstrap for Rails 3.x - 4 Asset Pipeline
+  gem 'twitter-bootstrap-rails'
+end
 
 group :development do
   # Spring speeds up development by keeping your application running in the background.
