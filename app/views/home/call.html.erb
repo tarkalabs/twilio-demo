@@ -5,7 +5,7 @@
 
 <input type="text" id="phoneNumber" placeholder="Enter a phone number to call"/>
 
-<div id="log">Loading pigeons...</div>
+<div id="log">Loading...</div>
 
 <script type="text/javascript" src="//static.twilio.com/libs/twiliojs/1.2/twilio.min.js"></script>
 <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
@@ -13,7 +13,17 @@
 
 <script type="text/javascript">
   /* Create the Client with a Capability Token */
-  Twilio.Device.setup("<%= @twilio_token %>", {debug: true});
+  // Twilio.Device.setup("<%= @twilio_token %>", {debug: true});
+  ttoken = '<%= @twilio_token %>';
+  app_error = '<%= @error %>';
+  (function(ttoken, err){
+    console.log(ttoken);
+    if(ttoken == '') {
+      $("#log").text(err);
+    } else {
+      Twilio.Device.setup(ttoken, {debug: true});
+    }
+  })(ttoken, app_error);
 
   /* Let us know when the client is ready. */
   Twilio.Device.ready(function (device) {
@@ -22,7 +32,7 @@
 
   /* Report any errors on the screen */
   Twilio.Device.error(function (error) {
-      $("#log").text("Error: " + error.message);
+      $("#log").text("Error: " + error.code + '::' + error.message);
   });
 
   Twilio.Device.connect(function (conn) {
@@ -36,11 +46,23 @@
 
   /* Connect to Twilio when we call this function. */
   function call() {
-        // get the phone number to connect the call to
-        params = {"ToPhoneNumber": $("#phoneNumber").val(),
-                  "FromPhoneNumber": $('#caller').attr('data-caller')};
-        Twilio.Device.connect(params);
-      }
+    $("#log").text("Checking authorization..");
+    var req = $.ajax({
+      url: '/call',
+      dataType: 'json',
+    });
+    var success = function( resp ) {
+      // get the phone number to connect the call to
+      params = {"ToPhoneNumber": $("#phoneNumber").val(),
+                "FromPhoneNumber": $('#caller').attr('data-caller')};
+      Twilio.Device.connect(params);
+    };
+    var err = function( req, status, err ) {
+      var error = JSON.parse(req.responseText)['error'] || err;
+      $("#log").text(error);
+    };
+    req.then( success, err );
+  }
 
   /* A function to end a connection to Twilio. */
   function hangup() {

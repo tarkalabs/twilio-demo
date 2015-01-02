@@ -10,6 +10,20 @@ class User < ActiveRecord::Base
   after_commit :create_twilio_subaccount, on: :create
   before_destroy :delete_twilio_subaccount
 
+  def twilio_active?
+    tactive == true  #to return false for nil when the user object is created for the 1st time
+  end
+
+  def twilio_suspended?
+    not twilio_active?
+  end
+
+  def suspend_twilio_account
+    self.update_attribute(:tactive, false)
+    Resque.enqueue(TwilioServiceWorker, :suspend_subaccount, { id: user.id, tsid: user.tsid })
+  end
+
+  private
   def create_twilio_subaccount
     return if Rails.env.test?
     logger.info "create_twilio_subaccount callback invoked for id = #{self.id}"
