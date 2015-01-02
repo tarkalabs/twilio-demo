@@ -27,12 +27,7 @@ class HomeController < ApplicationController
       return
     end
 
-    # response_to_twilio_callback = TwilioCallTwiMLGeneratorService.new(params[:FromPhoneNumber], params[:ToPhoneNumber]).process
-    # TODO: Check if the FromPhoneNumber is a verified Twilio PhoneNumber
-    # TODO: How do we ensure that one end-user doesn't abuse other's users phone number??
-    response_to_twilio_callback = generateTwiml(params[:FromPhoneNumber], params[:ToPhoneNumber])
-    p response_to_twilio_callback
-    render xml: response_to_twilio_callback
+    render xml: generateTwiml(params[:FromPhoneNumber], params[:ToPhoneNumber])
   end
 
   def suspendaccount
