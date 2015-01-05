@@ -21,5 +21,6 @@ module TwilioDemo
     # config.i18n.default_locale = :de
 
     # config.middleware.use Rack::TwilioWebhookAuthentication, 'bbcf43f2dfd2596e67d24f2fba70698f', '/suspendaccount', '/outboundcall'
+    config.middleware.use Rack::TwilioWebhookAuthentication, nil, '/suspendaccount', '/outboundcall', '/call'
   end
 end

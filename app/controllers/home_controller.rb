@@ -21,20 +21,10 @@ class HomeController < ApplicationController
 
   #This is callback service. Twilio calls this when the end-user makes a call from Twilio Web Client
   def outboundcall
-    unless genuine_twilio_request?
-      head :forbidden
-      # render plain: ["Twilio Request Validation Failed."], status: :forbidden
-      return
-    end
-
     render xml: generateTwiml(params[:FromPhoneNumber], params[:ToPhoneNumber])
   end
 
   def suspendaccount
-    unless genuine_twilio_request?
-      head :forbidden and return
-    end
-
     user = User.find_by_tsid(params["AccountSid"]);
     user.suspend_twilio_account
 
@@ -80,21 +70,4 @@ class HomeController < ApplicationController
     error.blank? ? :ok : :unauthorized
   end
 
-  def genuine_twilio_request?
-    params = call_params
-
-    # Ref: https://twilio-ruby.readthedocs.org/en/latest/usage/validation.html
-    tsid = params['AccountSid']
-    user = User.find_by_tsid(tsid)
-    validator = Twilio::Util::RequestValidator.new user.tauthtoken
-    # the callback URL you provided to Twilio
-    url = request.original_url #"http://www.example.com/my/callback/url.xml"
-    # the POST variables attached to the request (eg "From", "To")
-    post_vars = request.post? ? request.POST : {}
-    # X-Twilio-Signature header value #Ref: http://stackoverflow.com/questions/19972313/accessing-custom-header-variables-in-ruby-on-rails
-    signature = request.headers['HTTP_X_TWILIO_SIGNATURE'] || '' #"HpS7PBa1Agvt4OtO+wZp75IuQa0=" # will look something like that
-    puts "url=#{url}\n post_vars=#{post_vars}\n signature=#{signature}"
-
-    validator.validate(url, post_vars, signature)
-  end
 end

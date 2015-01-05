@@ -46,6 +46,7 @@
 
   /* Connect to Twilio when we call this function. */
   function call() {
+    diableCalling();
     $("#log").text("Checking authorization..");
     var req = $.ajax({
       url: '/call',
@@ -58,8 +59,9 @@
       Twilio.Device.connect(params);
     };
     var err = function( req, status, err ) {
-      var error = JSON.parse(req.responseText)['error'] || err;
+      var error = JSON.parse(req.responseText)['error'] || err; //$.parseJSON can be used alternatively??
       $("#log").text(error);
+      enableCalling();
     };
     req.then( success, err );
   }
@@ -67,5 +69,16 @@
   /* A function to end a connection to Twilio. */
   function hangup() {
       Twilio.Device.disconnectAll();
+      enableCalling();
+  }
+
+  function enableCalling() {
+    $('caller').removeAttr('disabled');
+    $('phoneNumber').removeAttr('disabled');
+  }
+
+  function diableCalling() {
+    $('caller').attr('disabled','disabled');
+    $('phoneNumber').attr('disabled','disabled');
   }
 </script>

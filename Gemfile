@@ -4,7 +4,7 @@ source 'https://rubygems.org'
 gem 'rails', '4.1.8'
 # Use sqlite3 as the database for Active Record
 gem 'sqlite3'
-gem 'sass-rails', '~> 4.0.3'
+# gem 'sass-rails', '~> 4.0.3'
 
 # Use jquery as the JavaScript library
 gem 'jquery-rails'
@@ -23,21 +23,20 @@ gem 'devise'
 gem 'resque'
 gem 'resque-web', require: 'resque_web'
 
-# Gems used only for assets and not required
-# in production environments by default.
-group :assets do
-  # Use SCSS for stylesheets
-  gem 'sass-rails', '~> 4.0.3'
-  # Use CoffeeScript for .js.coffee assets and views
-  gem 'coffee-rails', '~> 4.0.0'
+# Use SCSS for stylesheets
+gem 'sass-rails', '~> 4.0.3'
+# Use CoffeeScript for .js.coffee assets and views
+gem 'coffee-rails', '~> 4.0.0'
 
-  # See https://github.com/sstephenson/execjs#readme for more supported runtimes
-  # gem 'therubyracer'
+gem 'uglifier', '>= 2.5.3'
 
-  gem 'uglifier', '>= 2.5.3'
-  # Twitter Bootstrap for Rails 3.x - 4 Asset Pipeline
-  gem 'twitter-bootstrap-rails'
-end
+
+# See https://github.com/sstephenson/execjs#readme for more supported runtimes
+gem 'therubyracer', :require => 'v8'
+# Bootstrap dependency
+gem 'less-rails'
+# Twitter Bootstrap for Rails 3.x - 4 Asset Pipeline
+gem 'twitter-bootstrap-rails', '3.2.0'
 
 group :development do
   # Spring speeds up development by keeping your application running in the background.
@@ -51,7 +50,7 @@ group :development do
   gem 'dotenv-rails'
 end
 
-gem 'twilio-ruby'
+gem 'twilio-ruby', :github => "karthiks/twilio-ruby", :branch => 'dynamic_auth_token'
 
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
