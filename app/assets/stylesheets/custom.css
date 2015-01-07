@@ -6,7 +6,7 @@ body {
 
 #log {
   width: 466px;
-  height: 25px;
+  height: 50px;
   background: #404040;
   padding: 10px;
   /*margin-left: -243px;*/
@@ -96,10 +96,10 @@ button.call, button.hangup, input {
 button.call, button.hangup {
     position: relative;
     overflow: visible;
-    display: inline-block;
+    /*display: inline-block;*/
     padding: 0.5em 1em;
     border: 1px solid #d4d4d4;
-    margin: 300px 0 0 0;
+    margin: 300px 0 0 300px;
     text-decoration: none;
     text-shadow: 1px 1px 0 #fff;
     font:35px/normal sans-serif;
