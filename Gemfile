@@ -51,6 +51,7 @@ group :development do
 end
 
 gem 'twilio-ruby', :github => "karthiks/twilio-ruby", :branch => 'dynamic_auth_token'
+# gem 'twilio-ruby', :git => "//Users/karthiks/projects/rails_lab/twilio-ruby", :branch => 'dynamic_auth_token'
 
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'

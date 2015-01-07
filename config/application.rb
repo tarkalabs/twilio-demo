@@ -21,6 +21,11 @@ module TwilioDemo
     # config.i18n.default_locale = :de
 
     # config.middleware.use Rack::TwilioWebhookAuthentication, 'bbcf43f2dfd2596e67d24f2fba70698f', '/suspendaccount', '/outboundcall'
-    config.middleware.use Rack::TwilioWebhookAuthentication, nil, '/suspendaccount', '/outboundcall', '/call'
+    config.middleware.use Rack::TwilioWebhookAuthentication, nil, '/suspendaccount', '/outboundcall' do |account_sid|
+      return '' if account_sid.nil?
+      user = User.find_by_tsid(account_sid)
+      puts "--------------- #{user.tauthtoken} --------------"
+      user.tauthtoken
+    end
   end
 end

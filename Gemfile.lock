@@ -1,6 +1,6 @@
 GIT
   remote: git://github.com/karthiks/twilio-ruby.git
-  revision: e7a1e84e9eda3e9db9ff51899689c10033a2c46c
+  revision: f7c88d7d73cceba72f956009e1e2d0e42c10f43d
   branch: dynamic_auth_token
   specs:
     twilio-ruby (3.14.2)
