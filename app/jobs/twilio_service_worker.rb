@@ -36,9 +36,11 @@ class TwilioServiceWorker
     end
 
     trigger_value = "0.30"
-    trigger = ts.create_usage_trigger_on_price_for_calls(subaccount.sid, subaccount.auth_token, trigger_value)
+    trigger = ts.create_usage_trigger_on_price_for_calls(user.tsid, user.tauthtoken, trigger_value)
+    return if trigger.nil?
     # user.ttrigsid = trigger.sid
-    # user.save!
+    user.tactive = true
+    user.save!
   end
 
   def self.suspend_subaccount hash
@@ -46,7 +48,6 @@ class TwilioServiceWorker
     ts = TwilioService.new
     user = User.find id
     subaccount = ts.suspend_subaccount("#{user.tsid}")
-    # user.tactive = false
     puts "A subaccount with sid #{user.sid} is temporarily suspended in Twilio."
   end
 

@@ -1,6 +1,7 @@
 require 'twilio-ruby'
 
 class HomeController < ApplicationController
+  include Webhookable
   skip_before_filter :authenticate_user!, :only => [:outboundcall, :suspendaccount]
   skip_before_filter :verify_authenticity_token, only: [:outboundcall, :suspendaccount]
 
@@ -8,20 +9,22 @@ class HomeController < ApplicationController
     if tsid && tauthtoken && current_user.twilio_active?
       capability = Twilio::Util::Capability.new tsid, tauthtoken
       capability.allow_client_outgoing tappsid
-      @twilio_token = capability.generate 30 # 30 seconds, reference: https://www.twilio.com/docs/client/capability-tokens#token-expiration
-      return
+      @twilio_token = capability.generate #150 # 30 seconds, reference: https://www.twilio.com/docs/client/capability-tokens#token-expiration
+      # return
     end
     @error = 'The voice is currently disabled.' if current_user.twilio_suspended?
     @twilio_token ||= ''
     respond_to do |format|
       format.html
-      format.json { render json: {:error=> @error, :twilio_token => @twilio_token}, status: status(@error)}
+      format.json { render :json => {:error=> @error, :twilio_token => @twilio_token},
+                           :status => status(@error) }
     end
   end
 
   #This is callback service. Twilio calls this when the end-user makes a call from Twilio Web Client
   def outboundcall
-    render xml: generateTwiml(params[:FromPhoneNumber], params[:ToPhoneNumber])
+    # This FromPhoneNumber should have been verified in the associated sub-account
+    render_twiml generateTwiml(params[:FromPhoneNumber], params[:ToPhoneNumber])
   end
 
   def suspendaccount
@@ -50,7 +53,7 @@ class HomeController < ApplicationController
       r.Dial :callerId => from_phone_number do |d| # callerId is number from which call is made.
         d.Number(CGI::escapeHTML to_phone_number) # The number to call
       end
-    end.text.strip
+    end #.text.strip
   end
 
   private
