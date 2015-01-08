@@ -3,7 +3,7 @@ require 'twilio-ruby'
 class HomeController < ApplicationController
   include Webhookable
   skip_before_filter :authenticate_user!, :only => [:outboundcall, :suspendaccount]
-  skip_before_filter :verify_authenticity_token, only: [:outboundcall, :suspendaccount]
+  skip_before_filter :verify_authenticity_token, only: [:outboundcall, :suspendaccount] #, :verifyphonenumber]
 
   def call
     if tsid && tauthtoken && current_user.twilio_active?
@@ -18,6 +18,15 @@ class HomeController < ApplicationController
       format.html
       format.json { render :json => {:error=> @error, :twilio_token => @twilio_token},
                            :status => status(@error) }
+    end
+  end
+
+  def verifyphonenumber
+    tc = Twilio::REST::Client.new tsid, tauthtoken
+    caller_id = tc.outgoing_caller_ids.create(:phone_number => params[:PhoneNumber])
+    respond_to do |format|
+      format.json { render :json => {:verification_code => caller_id.validation_code},
+                    :status => :ok }
     end
   end
 

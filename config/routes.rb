@@ -20,6 +20,7 @@ Rails.application.routes.draw do
   root 'home#call'
   get 'call' => 'home#call'
 
+  post 'verifyphonenumber' => 'home#verifyphonenumber'
   post 'outboundcall' => 'home#outboundcall'
   post 'suspendaccount' => 'home#suspendaccount'
   post 'twilio/voice' => 'twilio#voice'
