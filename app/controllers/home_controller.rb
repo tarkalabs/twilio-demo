@@ -21,6 +21,9 @@ class HomeController < ApplicationController
     end
   end
 
+  def addphonenumber
+  end
+
   def verifyphonenumber
     tc = Twilio::REST::Client.new tsid, tauthtoken
     caller_id = tc.outgoing_caller_ids.create(:phone_number => params[:PhoneNumber])

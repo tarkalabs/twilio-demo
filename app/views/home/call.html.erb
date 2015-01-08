@@ -1,11 +1,3 @@
-<div>
-  <input type="text" id="verifymobilenumber" placeholder="Add a phone number to be verified"/>
-  <button onclick="verifyMobileNumber();">AddNumber</button>
-  <div id='verifyblock' style='display:none'>
-    <span id='verifydesc'> You'll now get a phone call to the number you jus' added. Key-in the below verification code to confirm this mobile number.</span>
-    <h3 id='verifycode'></h3>
-  </div>
-</div>
 
 <div id="twilioToken" data-token="<%= @twilio_token %>"></div>
 
@@ -21,27 +13,6 @@
 
 
 <script type="text/javascript">
-  function verifyMobileNumber() {
-    pnumber = $('#verifymobilenumber').val();
-    var req = $.ajax({
-      beforeSend: function(xhr) {xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))},
-      url: '/verifyphonenumber',
-      type: 'POST',
-      data: {'PhoneNumber': pnumber},
-      dataType: 'json',
-    });
-    var success = function(resp) {
-      console.log(resp);
-      $('#verifyblock').show();
-      $('#verifycode').text(resp['verification_code']);
-    };
-    var err = function( req, status, err ) {
-      var error = JSON.parse(req.responseText)['error'] || err; //$.parseJSON can be used alternatively??
-      alert(error);
-    };
-    req.then( success, err );
-  }
-
   /* Create the Client with a Capability Token */
   // Twilio.Device.setup("<%= @twilio_token %>", {debug: true});
   ttoken = '<%= @twilio_token %>';

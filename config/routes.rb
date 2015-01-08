@@ -3,7 +3,7 @@ ResqueWeb::Engine.eager_load! if Rails.env.development?
 
 Rails.application.routes.draw do
 
-  devise_for :users
+  devise_for :users, :controllers => { :registrations => "registrations" }
 
   # Route constraint using the current user when using Devise or another warden based authentication system
   resque_web_constraint = lambda do |request|
@@ -20,6 +20,7 @@ Rails.application.routes.draw do
   root 'home#call'
   get 'call' => 'home#call'
 
+  get 'addphonenumber' => 'home#addphonenumber'
   post 'verifyphonenumber' => 'home#verifyphonenumber'
   post 'outboundcall' => 'home#outboundcall'
   post 'suspendaccount' => 'home#suspendaccount'
