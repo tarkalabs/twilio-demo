@@ -20,7 +20,7 @@ class User < ActiveRecord::Base
 
   def suspend_twilio_account
     self.update_attribute(:tactive, false)
-    Resque.enqueue(TwilioServiceWorker, :suspend_subaccount, { id: user.id, tsid: user.tsid })
+    Resque.enqueue(TwilioServiceWorker, :suspend_subaccount, { id: self.id, tsid: self.tsid })
   end
 
   private
