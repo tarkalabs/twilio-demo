@@ -7,6 +7,7 @@ class HomeController < ApplicationController
 
   def call
     if tsid && tauthtoken && current_user.twilio_active?
+      @from_phone_number = getTwilioVerifiedPhoneNumber # You should ideally get this from User table
       capability = Twilio::Util::Capability.new tsid, tauthtoken
       capability.allow_client_outgoing tappsid
       @twilio_token = capability.generate #150 # 30 seconds, reference: https://www.twilio.com/docs/client/capability-tokens#token-expiration
@@ -85,4 +86,14 @@ class HomeController < ApplicationController
     error.blank? ? :ok : :unauthorized
   end
 
+  def getTwilioClient
+    Twilio::REST::Client.new tsid, tauthtoken
+  end
+
+  def getTwilioVerifiedPhoneNumber
+    tc = getTwilioClient
+    caller_id = tc.outgoing_caller_ids.list.first
+    puts "-"*10 + " #{caller_id.try(:phone_number)} " + "-"*10
+    caller_id.present? ? caller_id.phone_number : ''
+  end
 end

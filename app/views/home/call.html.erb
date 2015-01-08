@@ -1,7 +1,7 @@
 
 <div id="twilioToken" data-token="<%= @twilio_token %>"></div>
 
-<button id="caller" class="call" onclick="call();" data-caller="+919500031320">Call</button>
+<button id="caller" class="call" onclick="call();" data-caller="<%= @from_phone_number%>">Call</button>
 <button id="hangup" class="hangup" onclick="hangup();">Hangup</button>
 
 <input type="text" id="phoneNumber" placeholder="Enter a phone number to call"/>

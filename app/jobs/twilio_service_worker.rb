@@ -35,7 +35,7 @@ class TwilioServiceWorker
       puts "A TwiML App for the sub-account #{subaccount.friendly_name} is created"
     end
 
-    trigger_value = "0.30"
+    trigger_value = "0.20"
     trigger = ts.create_usage_trigger_on_price_for_calls(user.tsid, user.tauthtoken, trigger_value)
     return if trigger.nil?
     # user.ttrigsid = trigger.sid
