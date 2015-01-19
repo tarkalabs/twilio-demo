@@ -50,7 +50,8 @@ group :development do
   gem 'dotenv-rails'
 end
 
-gem 'twilio-ruby', :github => "karthiks/twilio-ruby", :branch => 'dynamic_auth_token'
+gem 'twilio-ruby'
+# gem 'twilio-ruby', :github => "karthiks/twilio-ruby", :branch => 'dynamic_auth_token'
 # gem 'twilio-ruby', :git => "//Users/karthiks/projects/rails_lab/twilio-ruby", :branch => 'dynamic_auth_token'
 
 # Use ActiveModel has_secure_password
