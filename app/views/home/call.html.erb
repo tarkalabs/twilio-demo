@@ -9,26 +9,43 @@
 <div id="log">Loading...</div>
 
 <script type="text/javascript" src="//static.twilio.com/libs/twiliojs/1.2/twilio.min.js"></script>
-<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
-
 
 <script type="text/javascript">
   /* Create the Client with a Capability Token */
   // Twilio.Device.setup("<%= @twilio_token %>", {debug: true});
-  ttoken = '<%= @twilio_token %>';
-  app_error = '<%= @error %>';
-  (function(ttoken, err){
+  (function(){
+    ttoken = '<%= @twilio_token %>';
+    app_error = '<%= @error %>';
     console.log(ttoken);
     if(ttoken == '') {
-      $("#log").text(err);
+      $("#log").text(app_error);
     } else {
+      /*
+       * There is no need to instantiate Twilio.Device yourself, but you do need to invoke .setup() before using it.
+       */
       Twilio.Device.setup(ttoken, {debug: true});
     }
-  })(ttoken, app_error);
+  })();
 
-  /* Let us know when the client is ready. */
+  /* Let us know when the client is ready.
+   * This is initially triggered when all operations in .setup() have completed and
+   * the device is ready and online. It may be triggered again if the device goes offline and comes back online
+   * (i.e. the connection drops and returns).
+   */
   Twilio.Device.ready(function (device) {
-      $("#log").text("Ready");
+    $("#log").text("Ready");
+    console.log("Twilio.Device is now ready for connections");
+  });
+
+  /* This is triggered when the connection to Twilio drops or the device's capability token is invalid/expired.
+   * In either of these scenarios, the device cannot receive incoming connections or make outgoing connections.
+   * If the token expires during an active connection the offline event handler will be called, but the connection
+   * will not be terminated. In this situation you will have to call Twilio.Device.setup() with a valid token before
+   * attempting or receiving the next connection.
+   */
+  Twilio.Device.offline(function (device) {
+    $("#log").text("Ready");
+    console.log("Twilio.Device is now ready for connections");
   });
 
   /* Report any errors on the screen */
@@ -41,9 +58,16 @@
   });
 
   /* Log a message when a call disconnects. */
-    Twilio.Device.disconnect(function (conn) {
-        $("#log").text("Call ended");
-    });
+  Twilio.Device.disconnect(function (conn) {
+      $("#log").text("Call ended");
+  });
+
+  Twilio.Device.presence(function (presenceEvent) {
+      // Called for each available client when this device becomes ready
+      // and every time another client's availability changes.
+      presenceEvent.from // => name of client whose availability changed
+      presenceEvent.available // => true or false
+  });
 
   /* Connect to Twilio when we call this function. */
   function call() {
@@ -54,6 +78,8 @@
       dataType: 'json',
     });
     var success = function( resp ) {
+      $('#twilioToken').attr('data-token','')
+      Twilio.Device.setup(ttoken, {debug: true});
       // get the phone number to connect the call to
       var params = {"ToPhoneNumber": $("#phoneNumber").val(),
                 "FromPhoneNumber": $('#caller').attr('data-caller')};
@@ -65,6 +91,13 @@
       enableCalling();
     };
     req.then( success, err );
+  }
+
+  /* Returns the active connection object.
+   * Connection objects can be used to perform operations on the connection like mute, unmute, sending DTMF digits, etc.
+   */
+  function activeConnection() {
+    return Twilio.Device.activeConnection();
   }
 
   /* A function to end a connection to Twilio. */
