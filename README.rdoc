@@ -6,21 +6,24 @@ application up and running.
 Things you may want to cover:
 
 * Ruby version
+  ruby 2.1.3p242
 
 * System dependencies
-
+  Rails and for more see its Gemfile
+  
 * Configuration
-
-* Database creation
-
-* Database initialization
-
+  Run `ngrok 3000` to expose dev env to the internet and copy/paste the randomly-generated url at Twilio Website configuring it to reach dev env for callback url
+  
 * How to run the test suite
+  This is a PoC exploring Twilio API and so no tests available
 
 * Services (job queues, cache servers, search engines, etc.)
+  We use Resque services for async jobs. After starting rails, resque web interface is available at http://localhost:3000/resque_web
+  Resque jobs can be started from the command line with the command `bundle exec rake resque:work QUEUE='*'`
 
 * Deployment instructions
-
+  Run rails server in your dev env comman-line like `rails server`
+  
 * ...
 
 
