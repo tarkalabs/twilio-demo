@@ -65,6 +65,7 @@
     log("PRESENCE: ");
     // Called for each available client when this device becomes ready
     // and every time another client's availability changes.
+    // https://www.twilio.com/blog/2011/09/twilio-client-presence-for-everyone.html
     karthik = presenceEvent;
     presenceEvent.from // => name of client whose availability changed
     presenceEvent.available // => true or false
