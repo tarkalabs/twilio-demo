@@ -24,7 +24,8 @@ Things you may want to cover:
 * Deployment instructions
   Run rails server in your dev env comman-line like `rails server`
   
-* ...
+* Environment Configuration
+  Rename the `.env.sample` to `.env` file and make changes to the key/value pairs per your environment before starting your rails server
 
 
 Please feel free to use a different markup language if you do not plan to run
