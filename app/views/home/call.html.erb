@@ -24,6 +24,7 @@
        * There is no need to instantiate Twilio.Device yourself, but you do need to invoke .setup() before using it.
        */
       Twilio.Device.setup(ttoken, {debug: true});
+      log("Go make your call..");
     }
   })();
 
@@ -33,8 +34,7 @@
    * (i.e. the connection drops and returns).
    */
   Twilio.Device.ready(function (device) {
-    $("#log").text("Ready");
-    console.log("Twilio.Device is now ready for connections");
+    log("READY: Ready to make calls..");
   });
 
   /* This is triggered when the connection to Twilio drops or the device's capability token is invalid/expired.
@@ -44,33 +44,42 @@
    * attempting or receiving the next connection.
    */
   Twilio.Device.offline(function (device) {
-    $("#log").text("Ready");
-    console.log("Twilio.Device is now ready for connections");
+    log("OFFLINE: Oops!..the connection got dropped.");
   });
 
   /* Report any errors on the screen */
   Twilio.Device.error(function (error) {
-      $("#log").text("Error: " + error.code + '::' + error.message);
+      log("ERROR: " + error.code + '::' + error.message);
   });
 
   Twilio.Device.connect(function (conn) {
-      $("#log").text("Successfully established call");
+      log("CONNECT: Successfully established call");
   });
 
   /* Log a message when a call disconnects. */
   Twilio.Device.disconnect(function (conn) {
-      $("#log").text("Call ended");
+      log("DISCONNECT: Call ended");
   });
 
   Twilio.Device.presence(function (presenceEvent) {
-      // Called for each available client when this device becomes ready
-      // and every time another client's availability changes.
-      presenceEvent.from // => name of client whose availability changed
-      presenceEvent.available // => true or false
+    log("PRESENCE: ");
+    // Called for each available client when this device becomes ready
+    // and every time another client's availability changes.
+    karthik = presenceEvent;
+    presenceEvent.from // => name of client whose availability changed
+    presenceEvent.available // => true or false
   });
+
+  function has_validation_problem() {
+    if( $('#phoneNumber').val().trim() == "" ) {
+      log("Phone Number cannot be empty!");
+      return true;
+    };
+  }
 
   /* Connect to Twilio when we call this function. */
   function call() {
+    if(has_validation_problem()) return;
     diableCalling();
     $("#log").text("Checking authorization..");
     var req = $.ajax({
@@ -78,12 +87,12 @@
       dataType: 'json',
     });
     var success = function( resp ) {
-      $('#twilioToken').attr('data-token','')
-      Twilio.Device.setup(ttoken, {debug: true});
-      // get the phone number to connect the call to
-      var params = {"ToPhoneNumber": $("#phoneNumber").val(),
-                "FromPhoneNumber": $('#caller').attr('data-caller')};
-      Twilio.Device.connect(params);
+      setupTwilio(resp.twilio_token).done(function() {
+        // get the phone number to connect the call to
+        var params = {"ToPhoneNumber": $("#phoneNumber").val(),
+                  "FromPhoneNumber": $('#caller').attr('data-caller')};
+        Twilio.Device.connect(params);
+      });
     };
     var err = function( req, status, err ) {
       var error = JSON.parse(req.responseText)['error'] || err; //$.parseJSON can be used alternatively??
@@ -93,6 +102,25 @@
     req.then( success, err );
   }
 
+  // function connectWhenReady(params) {
+  //   if(isReady()) {
+  //     Twilio.Device.connect(params);
+  //   }
+  // }
+
+  function setupTwilio(ttoken) {
+    var deferred = $.Deferred();
+    $('#twilioToken').attr('data-token', ttoken);
+    Twilio.Device.setup(ttoken, {debug: true});
+    var id = setInterval(function() {
+      if(isReady()) {
+        deferred.resolve();
+        clearInterval(id);
+      }
+    }, 100);
+    return deferred.promise();
+  }
+
   /* Returns the active connection object.
    * Connection objects can be used to perform operations on the connection like mute, unmute, sending DTMF digits, etc.
    */
@@ -100,10 +128,23 @@
     return Twilio.Device.activeConnection();
   }
 
+  function status() {
+    return Twilio.Device.status();
+  }
+
+  function isReady() {
+    return status() == "ready";
+  }
+
+  function isNotReady() {
+    return !isReady();
+  }
+
   /* A function to end a connection to Twilio. */
   function hangup() {
-      Twilio.Device.disconnectAll();
-      enableCalling();
+    log("Disconnecting the call..");
+    Twilio.Device.disconnectAll();
+    enableCalling();
   }
 
   function enableCalling() {
@@ -114,5 +155,17 @@
   function diableCalling() {
     $('caller').attr('disabled','disabled');
     $('phoneNumber').attr('disabled','disabled');
+  }
+
+  function log(txt) {
+    $("#log").text(txt);
+    console.log(txt);
+  }
+
+  function sleep(millis) {
+    i = setTimeout(function(millis) {
+      console.log('i = ' + i);
+      clearTimeout(i);
+    }, millis);
   }
 </script>
