@@ -10,7 +10,7 @@ class HomeController < ApplicationController
       @from_phone_number = getTwilioVerifiedPhoneNumber # You should ideally get this from User table
       capability = Twilio::Util::Capability.new tsid, tauthtoken
       capability.allow_client_outgoing tappsid
-      @twilio_token = capability.generate 300 #150 # 30 seconds, reference: https://www.twilio.com/docs/client/capability-tokens#token-expiration
+      @twilio_token = capability.generate 30 #,300 seconds, reference: https://www.twilio.com/docs/client/capability-tokens#token-expiration
       # return
     end
     @error = 'The voice is currently disabled.' if current_user.twilio_suspended?

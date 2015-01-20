@@ -102,12 +102,6 @@
     req.then( success, err );
   }
 
-  // function connectWhenReady(params) {
-  //   if(isReady()) {
-  //     Twilio.Device.connect(params);
-  //   }
-  // }
-
   function setupTwilio(ttoken) {
     var deferred = $.Deferred();
     $('#twilioToken').attr('data-token', ttoken);
@@ -162,10 +156,4 @@
     console.log(txt);
   }
 
-  function sleep(millis) {
-    i = setTimeout(function(millis) {
-      console.log('i = ' + i);
-      clearTimeout(i);
-    }, millis);
-  }
 </script>
