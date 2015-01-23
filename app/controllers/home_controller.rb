@@ -25,9 +25,12 @@ class HomeController < ApplicationController
   def addphonenumber
   end
 
+  # This work-flow is incomplete without Twilio's callback service when the verification is done stating if it is successful or not.
   def verifyphonenumber
     tc = Twilio::REST::Client.new tsid, tauthtoken
-    caller_id = tc.outgoing_caller_ids.create(:phone_number => params[:PhoneNumber])
+    # Ref: https://www.twilio.com/docs/api/rest/outgoing-caller-ids
+    call_delay_in_sec = 45 # Can be 0 to 60 seconds
+    caller_id = tc.outgoing_caller_ids.create(:phone_number => params[:PhoneNumber], :call_delay => call_delay_in_sec)
     respond_to do |format|
       format.json { render :json => {:verification_code => caller_id.validation_code},
                     :status => :ok }
