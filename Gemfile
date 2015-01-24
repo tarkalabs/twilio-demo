@@ -32,9 +32,10 @@ gem 'uglifier', '>= 2.5.3'
 
 
 # See https://github.com/sstephenson/execjs#readme for more supported runtimes
-gem 'therubyracer', :require => 'v8'
+# gem 'therubyracer', :require => 'v8'
 # Bootstrap dependency
-gem 'less-rails'
+# gem 'less-rails'
+
 # Twitter Bootstrap for Rails 3.x - 4 Asset Pipeline
 gem 'twitter-bootstrap-rails', '3.2.0'
 
